@@ -1,5 +1,5 @@
-len <- length
-cnames <- colnames
-rnames <- rnames
-cSums <- colSums
-rSums <- rowSums
+len <- function(...) length(...)
+cnames <- function(...) colnames(...)
+rnames <- function(...) rownames(...)
+cSums <- function(...) colSums(...)
+rSums <- function(...) rowSums(...)

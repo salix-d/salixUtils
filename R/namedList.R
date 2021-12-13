@@ -17,18 +17,17 @@
 #'
 #' # Subsetting of a vector to get the variable names
 #' namedList(letters[1:3])
-
 namedList <- function(..., evalCall = FALSE, sorted = FALSE){
   if(!evalCall){
     vars <- as.list(sys.call())[-1]
-    if(!any(is.null(names(vars)))) vars <- vars[names(vars)==""]
+    if(!any(is.null(names(vars)))) vars <- vars[names(vars) == ""]
     nm <- as.character(vars)
     if(length(nm) == 1 && grep("\\W", nm)) evalCall <- TRUE
   }
   if(evalCall){
     vars <- as.list(match.call())[-1]
     if(!any(is.null(names(vars)))) vars <- vars[names(vars) %in% c("", "...")]
-    nm <-  eval.parent(as.expression(vars))
+    nm <- eval.parent(as.expression(vars))
   }
   names(nm) <- nm
   if(sorted) nm <- nm[sort(names(nm))]

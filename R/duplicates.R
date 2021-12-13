@@ -8,4 +8,3 @@ duplicates.vector <- function(input, na.rm = FALSE){
 duplicates.character <- function(input, na.rm = FALSE){
   duplicates.vector(input = input, na.rm = na.rm)
 }
-

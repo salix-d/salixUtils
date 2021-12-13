@@ -1,4 +1,4 @@
-Package: salix_miscFuns
+Package: salixUtils
 Type: Package
 Title: Misc functions
 Version: 0.1.0
