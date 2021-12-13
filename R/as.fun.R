@@ -9,40 +9,12 @@
 #' iris <- as.fun(~ .$Species ==  "setosa" & .$Petal.Width>0.2)(iris)
 iris[iris$Species  == "setosa" & iris$Petal.Width>0.2,]
 iris3[iris3[,"Sepal W.",1]>3 & iris3[,"Sepal W.",2]>3 & iris3[,"Sepal W.",3]>3,,]
-as.fun(~.[.x[,.y,1]>3&.x[,.y,2]>3&.x[,.y,3]>3,,])(iris3, "Sepal W.")
-`%~%` <- function(lhs, rhs){
-  # if(any(class(lhs) %in% c("matrix", "data.frame", "array"))){
-  if(class(lhs) != "list"){
-    lhs <- list(. = lhs)
-  }
-  `body<-`(function(args, .x = args[[1]], .y = args[[2]], . = args[[1]]){}, value = str2lang(rhs))(lhs)
-}
-`%map%` <- function(lhs, rhs){
-  # if(any(class(lhs) %in% c("matrix", "data.frame", "array"))){
-  if(class(lhs) != "list"){
-    lhs <- list(. = lhs)
-  }
-  f <- `body<-`(function(..., .x = ..1, .y = ..2, . = ..1){}, value = str2lang(rhs))
-  vapply(lhs, f, logical(1))
-}
-gbif.clean <- gbif[gbif %~% ~!is.null(.[["data"]])]
-identical(gbif.clean, gbif[mapr(gbif, "!is.null(.$data)")])
-identical(gbif.clean, gbif %~>% "!is.null(.$data)")
-identical(gbif.clean, extract(gbif, "!is.null(.$data)"))
-bench::mark(gbif %~>% ~!is.null(.$data),
-            gbif[gbif%~%~!is.null(.[["data"]])],
-            purrr::discard(gbif, ~is.null(.$data)),
-            extract(gbif, ~!is.null(.$data)),
-            iterations = 100)
-
-gbif.clean <- gbif[gbif %~% "!is.null(.$data)"]
-iris %~% ".[.[,1]>7 & .[,2]>2,]"
-iris %~% ".[1:6,!is.na(as.numeric(.[1,]))]"
-magrittr::`%>%`(gbif, .[vapply(., as.fun.character("!is.null(.$data)"), logical(1))])
-list(iris3, "Sepal W.") %~% ".x[.x[,.y,1]>3&.x[,.y,2]>3&.x[,.y,3]>3,,]"
-as.fun <- function(f, .formals = alist(... =, .x = ..1, .y = ..2, . = ..1)) {
+as.fun(~.[.x[,.y,1]>3&.x[,.y,2]>3&.x[,.y,3]>3,,], vectorize = TRUE)(iris3, "Sepal W.")
+# list(iris3, "Sepal W.") %~% ".x[.x[,.y,1]>3&.x[,.y,2]>3&.x[,.y,3]>3,,]"
+as.fun <- function(f, .formals = alist(... =, .x = ..1, .y = ..2, . = ..1), vectorize = FALSE) {
   if(is.null(names(.formals))) .formals <- `names<-`(vector("list",length(.formals)), .formals)
   if (length(f) == 3) stop("Only right sided formula allowed.")
+
   nf <- function(){}
   nf <- `body<-`(nf, value = f[[2]])
   nf <- `formals<-`(nf, value = .formals)
