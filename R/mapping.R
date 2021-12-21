@@ -4,15 +4,15 @@ setGeneric("%map%",
            }
 )
 setMethod("%map%",
-          signature(lhs = "list", rhs = "formula"),
+          signature(rhs = "formula"),
            function(lhs, rhs){
-             vapply(lhs, as.fun(rhs), logical(1))
+             lhs %map% as.fun(rhs)
            }
 )
 setMethod("%map%",
-          signature(lhs = "list", rhs = "character"),
+          signature(rhs = "character"),
            function(lhs, rhs){
-             vapply(lhs, as.fun(rhs), logical(1))
+             lhs %map% as.fun(rhs)
            }
 )
 setMethod("%map%",
@@ -27,30 +27,17 @@ setMethod("%map%",
             rhs(lhs)
           }
 )
-setMethod("%map%",
-          signature(lhs = "data.frame", rhs = "formula"),
-          function(lhs, rhs){
-            as.fun(rhs)(lhs)
-          }
-)
-setMethod("%map%",
-          signature(lhs = "data.frame", rhs = "character"),
-          function(lhs, rhs){
-            as.fun(rhs)(lhs)
-          }
-)
 setGeneric("%~%",
            def = function(lhs, rhs){
              f <- as.fun(rhs)
              f(lhs)
-             # vapply(lhs, f, logical(1))
            }
 )
 setMethod("%~%",
           signature(lhs = "list"),
           function(lhs, rhs){
             f <- as.fun(rhs)
-            vapply(lhs, f, logical(1))
+            sapply(lhs, f)
           }
 )
 setMethod("%~%",

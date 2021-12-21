@@ -1,5 +1,7 @@
 len <- function(...) length(...)
-cnames <- function(...) colnames(...)
-rnames <- function(...) rownames(...)
+cNames <- function(...) colnames(...)
+rNames <- function(...) rownames(...)
 cSums <- function(...) colSums(...)
 rSums <- function(...) rowSums(...)
+`%+%` <- function(...) paste0(...)
+
