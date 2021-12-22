@@ -1,3 +1,4 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^\R\tests\*.R$
+^\R\custom_tidyversestyle.R

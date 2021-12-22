@@ -1,10 +1,14 @@
+#' @export
 insertColumn <- function(dat, colIndex, colData = NA, colName = NULL){
-  out <- matrix(ncol = ncol(dat) + length(colIndex), nrow = nrow(dat))
-  colIndex <- sapply(seq(colIndex), function(i) colIndex[[i]] + (i - 1))
-  out[, -colIndex] <- dat
-  colnames(out)[-colIndex] <- colnames(dat)
+  nCol <- ncol(dat) + length(colIndex)
+  out <- matrix(ncol = nCol, nrow = nrow(dat), dimnames = list(NULL, seq(nCol)))
+  if(length(colIndex)>1){
+    colIndex <- vapply(seq(colIndex), function(i) colIndex[[i]] + (i - 1), double(1))
+  }
+  out[, -colIndex] <- as.matrix(dat)
+  if (!is.null(colnames(dat))) colnames(out)[-colIndex] <- colnames(dat)
   rownames(out) <- rownames(dat)
-  if(!missing(colData)) out[, is.na(colnames(out))] <- colData
-  if(!missing(colName)) colnames(out)[-colRanges] <- colnames(newDat)
+  if(!missing(colData)) out[, colIndex] <- colData
+  if(!missing(colName)) colnames(out)[colIndex] <- colName
   return(out)
 }

@@ -1,10 +1,10 @@
-setGeneric("extract", def = function(x, f, ...) x[vapply(x, f, logical(1))])
-setMethod("extract",
+#' @export
+methods::setGeneric("extract", def = function(x, f, ...) x[vapply(x, f, logical(1))])
+methods::setMethod("extract",
     signature(x = "array", f = "function"),
-    function (x, f)
+    function (x, f, margin = 1)
     {
         ndim <- length(dim(x))
-        stopifnot(margin <= ndim, "Margin higher than number of  dimension.")
         if(ndim == 1){
             x[f(x)]
         } else if(ndim==2){
@@ -24,12 +24,10 @@ setMethod("extract",
         }
     }
 )
-setMethod("extract",
+methods::setMethod("extract",
           signature(x = "matrix", f = "function"),
-          function (x, f)
+          function (x, f, margin = 1)
           {
-              ndim <- length(dim(x))
-              stopifnot(margin <= ndim, "Margin higher than number of  dimension.")
               if(margin == 1){
                   x[f(x),]
               } else {
@@ -37,12 +35,10 @@ setMethod("extract",
               }
           }
 )
-setMethod("extract",
+methods::setMethod("extract",
           signature(x = "data.frame", f = "function"),
-          function (x, f)
+          function (x, f, margin = 1)
           {
-              ndim <- length(dim(x))
-              stopifnot(margin <= ndim, "Margin higher than number of  dimension.")
               if(margin == 1){
                   x[f(x),]
               } else {
@@ -50,60 +46,60 @@ setMethod("extract",
               }
           }
 )
-setMethod("extract",
+methods::setMethod("extract",
     signature(x = "list", f = "function"),
     function (x, f)
     {
         x[vapply(x, f, logical(1))]
     }
 )
-setMethod("extract",
+methods::setMethod("extract",
     signature(x = "logical", f = "function"),
     function (x, f)
     {
         x[f(x)]
     }
 )
-setMethod("extract",
+methods::setMethod("extract",
     signature(x = "numeric", f = "function"),
     function (x, f)
     {
         x[f(x)]
     }
 )
-setMethod("extract",
+methods::setMethod("extract",
     signature(x = "integer", f = "function"),
     function (x, f)
     {
         x[f(x)]
     }
 )
-setMethod("extract",
+methods::setMethod("extract",
           signature(x = "complex", f = "function"),
           function (x, f)
           {
               x[f(x)]
           }
 )
-setMethod("extract",
+methods::setMethod("extract",
     signature(x = "character", f = "function"),
     function (x, f)
     {
         x[f(x)]
     }
 )
-setMethod("extract",
+methods::setMethod("extract",
     signature(x = "ANY", f = "formula"),
-    function (x, f, .formals)
+    function (x, f)
     {
-        extract(x = x, f = as.fun(f, .formals))
+        extract(x = x, f = as.fun(f))
     }
 )
-setMethod("extract",
+methods::setMethod("extract",
     signature(x = "ANY", f = "character"),
-    function (x, f, .formals)
+    function (x, f)
     {
-        extract(x = x, f = as.fun(f, .formals))
+        extract(x = x, f = as.fun(f))
     }
 )
 `%~%` <- `%map%` <- function(lhs, rhs){
@@ -113,6 +109,6 @@ setMethod("extract",
 `%~>%` <- function(lhs, rhs){
     lhs[lhs %~% rhs]
 }
-1:5 %~% ~.>2
-as.map('.[1,]>0')(iris[1,])
-iris[,iris[1,] %~% ~!is.na(as.numeric(.))]
+# 1:5 %~% ~.>2
+# as.map('.[1,]>0')(iris[1,])
+# iris[,iris[1,] %~% ~!is.na(as.numeric(.))]

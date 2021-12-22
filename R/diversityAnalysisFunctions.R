@@ -2,8 +2,8 @@
 #' @return a data frame with the calculated Shannon diversity index, species richness and evenness
 makeDiversityDF <- function(df){
   div.df <- data.frame(
-    H = diversity(df, "shannon"),
-    s = specnumber(df)
+    H = vegan::diversity(df, "shannon"),
+    s = vegan::specnumber(df)
   )
   div.df$E <- exp(div.df$H) / div.df$s
   return(div.df)
@@ -19,7 +19,7 @@ makeANOVAresultsDF <- function(data, x, r){
     y <- unlist(data[c])
     x <- unlist(x)
     r <- unlist(r)
-    a <- anova(nlme::lme(y ~ x, random = ~ 1 | r))
+    a <- stats::anova(nlme::lme(y ~ x, random = ~ 1 | r))
     res[c] <- c(
       sprintf("%.4f", a$`p-value`[2]),
       sprintf("%.4f", a$`F-value`[2])

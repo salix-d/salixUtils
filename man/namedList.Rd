@@ -19,17 +19,3 @@ A named list from the name(s) and value(s) of the given variable(s)
 \description{
 Making a named list
 }
-\examples{
-a <- 1
-b <- 2
-c <- 3
-
-# Using the variable names
-namedList(c, a, b)
-
-# Using a function to get the variable names
-namedList(ls(pattern = "^[a-c]$"), sorted = TRUE)
-
-# Subsetting of a vector to get the variable names
-namedList(letters[1:3])
-}

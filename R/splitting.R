@@ -2,6 +2,7 @@ subsetArr <- function(arr, margin, ind, commas){
   commas[[margin]] <- ind
   eval(str2lang(paste0("arr[", paste(commas, collapse = ""), "]")))
 }
+#' @export
 splitLen <- function(x, lenOut, begin=NULL, end=NULL, ...){
   print(match.call())
   if (!is.null(begin) || !is.null(end)) x <- x[begin:end]
@@ -9,8 +10,8 @@ splitLen <- function(x, lenOut, begin=NULL, end=NULL, ...){
   grp <- rep(1:lenOut, each = ceiling(l/lenOut))[1:l]
   unname(split(x, grp))
 }
-setGeneric("splitLen",signature = "x")
-setMethod("splitLen", signature = "data.frame",
+methods::setGeneric("splitLen",signature = "x")
+methods::setMethod("splitLen", signature = "data.frame",
           definition = function(x, lenOut, begin=NULL, end=NULL, margin = 1, ...){
             if(!is.null(begin) || !is.null(end)){
               x <- if(margin==1) x[begin:end, ] else x[,begin:end]
@@ -25,7 +26,7 @@ setMethod("splitLen", signature = "data.frame",
               sapply(split(seq(ncol(x)), grp), function(i) x[,i], simplify = FALSE)
             }
           })
-setMethod("splitLen", signature = "matrix",
+methods::setMethod("splitLen", signature = "matrix",
           definition = function(x, lenOut, begin=NULL, end=NULL, margin = 1, ...){
             if(!is.null(begin) || !is.null(end)){
               x <- if(margin==1) x[begin:end, ] else x[,begin:end]
@@ -40,7 +41,7 @@ setMethod("splitLen", signature = "matrix",
               sapply(split(seq(ncol(x)), grp), function(i) x[,i], simplify = FALSE)
             }
           })
-setMethod("splitLen", signature = "array",
+methods::setMethod("splitLen", signature = "array",
           definition = function(x, lenOut, begin=NULL, end=NULL, margin = 1, ...){
             commas <- as.list(rep(",", length(dim(x))))
             if(!is.null(begin) || !is.null(end)){
@@ -51,13 +52,14 @@ setMethod("splitLen", signature = "array",
             grp <- split(seq(l), grp)
             sapply(grp, subsetArr, arr = x, margin = margin, commas = commas, simplify = FALSE)
           })
+#' @export
 splitBy <- function(x, by, begin=NULL, end=NULL,...){
   if(!missing(begin)||!missing(end)) x <- x[begin:end]
   l <- length(x)
   unname(split(x, rep(1:ceiling(l/by), each = by)[1:l]))
 }
-setGeneric("splitBy", signature = "x")
-setMethod("splitBy", signature = "data.frame",
+methods::setGeneric("splitBy", signature = "x")
+methods::setMethod("splitBy", signature = "data.frame",
           definition = function(x, by, begin=NULL, end=NULL, margin = 1){
             if(!is.null(begin) || !is.null(end)){
               x <- if(margin==1) x[begin:end, ] else x[,begin:end]
@@ -71,7 +73,7 @@ setMethod("splitBy", signature = "data.frame",
               sapply(split(seq(ncol(x)), grp), function(i) x[,i], simplify = FALSE)
             }
           })
-setMethod("splitBy", signature = "matrix",
+methods::setMethod("splitBy", signature = "matrix",
           definition = function(x, by, begin=NULL, end=NULL, margin = 1){
             if(!is.null(begin) || !is.null(end)){
               x <- if(margin==1) x[begin:end, ] else x[,begin:end]
@@ -86,7 +88,7 @@ setMethod("splitBy", signature = "matrix",
               sapply(split(seq(ncol(x)), grp), function(i) x[,i], simplify = FALSE)
             }
           })
-setMethod("splitBy", signature = "array",
+methods::setMethod("splitBy", signature = "array",
           definition = function(x, by, begin=NULL, end=NULL, margin = 1){
             commas <- as.list(rep(",", length(dim(x))))
             if(!is.null(begin) || !is.null(end)){
