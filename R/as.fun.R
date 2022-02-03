@@ -21,7 +21,8 @@ methods::setMethod("as.fun",
           {
             if (length(.body) == 3) stop("Only right sided formula allowed.")
             f <- function(..., .x = ..1, .y = ..2, . = ..1){}
-            f <- `body<-`(f, value = str2lang(.body))
+            # f <- `body<-`(f, value = str2lang(.body))
+            f <- `body<-`(f, value = .body)
             f
           }
 )
@@ -35,27 +36,15 @@ methods::setMethod("as.fun",
             f
           }
 )
-# '%f%' <- function(.formals, .body) {
-#   f <- function(){}
-#   f <- `formals<-`(f, value = .formals)
-#   f <- `body<-`(f, value = .body[[2]])
-#   f
-# }
-# (function(.){.[.$Species %in%  c("setosa","virginica") & .$Petal.Width>0.2,]})(iris)
-# setMethod("as.fun",
-#           signature(.body = "formula"),
-#           function (.body, .formals = alist(... =, .x = ..1, .y = ..2, . = ..1))
-#           {
-#             if(is.null(names(.formals))) .formals <- `names<-`(vector("list",length(.formals)), .formals)
-#             if (length(.body) == 3) stop("Only right sided formula allowed.")
-#             nf <- function(){}
-#             nf <- `body<-`(nf, value = .body[[2]])
-#             nf <- `formals<-`(nf, value = .formals)
-             # nf <- if(vectorize) function(..., .x = ..1, .y = ..2, . = ..1){
-             #   if(!missing(.y)) vapply(.x, f, logical(1),.y)
-             #   else vapply(.x, f, logical(1))
-             # } else f
-#             nf
-#           }
-# )
+bench::mark(
+  purrr::as_mapper(~.x>3)(1:5),
+  as.fun(~.x>3)(1:5),
+  1:5 %f% ~.>3,
+  as.fun(".x>3")(1:5),
+  1:5 %f% ".>3",
+  iterations = 1000)[,c("expression","median", "itr/sec")]
 
+'%f%' <- function(lhs, rhs) {
+  as.fun(rhs)(lhs)
+}
+1:5 %f% ~.>3
