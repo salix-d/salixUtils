@@ -1,5 +1,22 @@
 #' @export
-methods::setGeneric("extract", def = function(x, f, ...) x[vapply(x, f, logical(1))])
+methods::setGeneric("extract", def = function(x, f, ...) x[f(x)])
+#' @exportMethod
+methods::setMethod("extract",
+                   signature(f = "formula"),
+                   function (x, f, ...)
+                   {
+                       extract(x = x, f = as.fun(f), ...)
+                   }
+)
+#' @exportMethod
+methods::setMethod("extract",
+                   signature(f = "character"),
+                   function (x, f, ...)
+                   {
+                       extract(x = x, f = as.fun(f), ...)
+                   }
+)
+#' @exportMethod
 methods::setMethod("extract",
     signature(x = "array", f = "function"),
     function (x, f, margin = 1)
@@ -24,6 +41,7 @@ methods::setMethod("extract",
         }
     }
 )
+#' @exportMethod
 methods::setMethod("extract",
           signature(x = "matrix", f = "function"),
           function (x, f, margin = 1)
@@ -35,6 +53,7 @@ methods::setMethod("extract",
               }
           }
 )
+#' @exportMethod
 methods::setMethod("extract",
           signature(x = "data.frame", f = "function"),
           function (x, f, margin = 1)
@@ -46,6 +65,7 @@ methods::setMethod("extract",
               }
           }
 )
+#' @exportMethod
 methods::setMethod("extract",
     signature(x = "list", f = "function"),
     function (x, f)
@@ -53,55 +73,7 @@ methods::setMethod("extract",
         x[vapply(x, f, logical(1))]
     }
 )
-methods::setMethod("extract",
-    signature(x = "logical", f = "function"),
-    function (x, f)
-    {
-        x[f(x)]
-    }
-)
-methods::setMethod("extract",
-    signature(x = "numeric", f = "function"),
-    function (x, f)
-    {
-        x[f(x)]
-    }
-)
-methods::setMethod("extract",
-    signature(x = "integer", f = "function"),
-    function (x, f)
-    {
-        x[f(x)]
-    }
-)
-methods::setMethod("extract",
-          signature(x = "complex", f = "function"),
-          function (x, f)
-          {
-              x[f(x)]
-          }
-)
-methods::setMethod("extract",
-    signature(x = "character", f = "function"),
-    function (x, f)
-    {
-        x[f(x)]
-    }
-)
-methods::setMethod("extract",
-    signature(x = "ANY", f = "formula"),
-    function (x, f)
-    {
-        extract(x = x, f = as.fun(f))
-    }
-)
-methods::setMethod("extract",
-    signature(x = "ANY", f = "character"),
-    function (x, f)
-    {
-        extract(x = x, f = as.fun(f))
-    }
-)
+
 `%~%` <- `%map%` <- function(lhs, rhs){
     f <- as.fun(rhs)
     vapply(lhs, rhs, logical(1))

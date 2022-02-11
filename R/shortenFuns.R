@@ -39,17 +39,16 @@ setMethod("%+=%",
   else lhs <- rep(lhs, each = lr)
   assign(nm, paste0(lhs, rhs), envir = parent.frame())
 }
-letters[1:2] %+% 1:2
-letters[1:2] %++% 1:2
-letters[1:2] %+% 1:3
-letters[1:2] %++% 1:3
-trm <- letters[1:2]
-trm %+*=% 1:2
-bench::mark(trm %++% LETTERS[1:10] %+% 1:10,
-            trm %+++% LETTERS[1:10] %+% 1:10,
-            trm %++% LETTERS[1:10] %+% 1:10,
-            trm %+++% LETTERS[1:10] %+% 1:10)
-df = function(...) data.frame(...)
+# letters[1:2] %+% 1:2
+# letters[1:2] %++% 1:2
+# letters[1:2] %+% 1:3
+# letters[1:2] %++% 1:3
+# trm <- letters[1:2]
+# trm %+*=% 1:2
+# bench::mark(trm %++% LETTERS[1:10] %+% 1:10,
+#             trm %+++% LETTERS[1:10] %+% 1:10,
+#             trm %++% LETTERS[1:10] %+% 1:10,
+#             trm %+++% LETTERS[1:10] %+% 1:10)
 #' @export
 as.df = function(...) as.data.frame(...)
 #' shortcut for `cbind.data.frame()`

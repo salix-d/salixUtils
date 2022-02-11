@@ -9,42 +9,34 @@
 #' @export
 methods::setGeneric("as.fun",
            def = function(.body) {
-             f <- function(..., .x = ..1, .y = ..2, . = ..1){}
-             f <- `body<-`(f, value = str2lang(.body))
-             f
+             as.function(alist(...=, . = ..1, .x = ..1, .y = ..2, eval(str2lang(.body))))
            }
-)
-
-methods::setMethod("as.fun",
-          signature(.body = "character"),
-          function (.body)
-          {
-            if (length(.body) == 3) stop("Only right sided formula allowed.")
-            f <- function(..., .x = ..1, .y = ..2, . = ..1){}
-            # f <- `body<-`(f, value = str2lang(.body))
-            f <- `body<-`(f, value = .body)
-            f
-          }
 )
 methods::setMethod("as.fun",
           signature(.body = "formula"),
           function (.body)
           {
             if (length(.body) == 3) stop("Only right sided formula allowed.")
-            f <- function(..., .x = ..1, .y = ..2, . = ..1){}
-            f <- `body<-`(f, value = .body[[2]])
-            f
+            as.function(alist(...=, . = ..1, .x = ..1, .y = ..2, eval(.body[[2]])))
           }
 )
-bench::mark(
-  purrr::as_mapper(~.x>3)(1:5),
-  as.fun(~.x>3)(1:5),
-  1:5 %f% ~.>3,
-  as.fun(".x>3")(1:5),
-  1:5 %f% ".>3",
-  iterations = 1000)[,c("expression","median", "itr/sec")]
-
-'%f%' <- function(lhs, rhs) {
-  as.fun(rhs)(lhs)
-}
-1:5 %f% ~.>3
+methods::setGeneric("%f%",
+           def = function(lhs, rhs) {
+             as.function(alist(...=, . = ..1, .x = ..1, .y = ..2, eval(str2lang(rhs))))(lhs)
+           }
+)
+methods::setMethod("%f%",
+          signature(lhs = "list"),
+          function(lhs, rhs)
+          {
+            lapply(lhs, as.fun(rhs))
+          }
+)
+methods::setMethod("%f%",
+          signature(rhs = "formula"),
+          function(lhs, rhs)
+          {
+            if (length(rhs) == 3) stop("Only right sided formula allowed.")
+            as.function(alist(...=, . = ..1, .x = ..1, .y = ..2, eval(rhs[[2]])))(lhs)
+          }
+)
