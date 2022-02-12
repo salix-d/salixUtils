@@ -1,7 +1,7 @@
 #include <Rcpp.h>
-using namespace
+using namespace Rcpp;
 
-//slower than base R at ~100+ but then uses much less memory
+// ? slower than base R at ~100+ but then uses much less memory
 // [[Rcpp::export]]
 std::vector<int> C_duplicates_int(std::vector<int> x){
   std::set<int> seen;
