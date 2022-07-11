@@ -1,5 +1,6 @@
 # todo: add methods for non-vectors
 seqsplit <- function(x, by = NULL, lenOut = NULL, ...){
+  if(missing(by) == missing(lenOut)) stop("Please, provide one of 'by' and 'lenOut'")
   l <- length(x)
   if(l==1) l <- as.integer(x)
   if(missing(by)) by <- as.integer(ceiling(l/lenOut))
