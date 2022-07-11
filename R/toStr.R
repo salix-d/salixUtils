@@ -1,16 +1,31 @@
-#' Convert an R Object to a Character String for prettier messages
+#' Convert an R Object to a Character String
 #'
-#' @param x The object to be converted.
+#' @description Similar to \link[base]{toString} but with additionnal parameters for more flexibility.
 #'
-#' @details The object is first converted to character and then the elements are
-#' concatenated together separated by ", ", and " and " for the last item.
+#' @param x            The object to be converted.
+#' @param and          (logical)  Whether to use "and" between the two last item. Default TRUE.
+#' @param oxford_comma (logical) Whether to use an oxford comma. Default FALSE. Ignored if `and` set to FALSE.
 #'
-#' @return A character vector of length 1.
+#' @return A character string.
 #' @export
 #'
 #' @examples
-toStr <- function(x){
-  if(!is.character(x)) x <- as.character(x)
+#' toStr(letters[1:3])
+
+toStr <- function(x, and = TRUE, oxford_comma = FALSE){
   n <- length(x)
-  paste(paste(x[-n], collapse = ", "), "and", x[n])
+  if (n > 1) {
+    if (all(x == as.integer(x)) && all(x == seq_len(n) + x[[1]] - 1)) {
+      x <- paste(x[[1]], "to", x[[n]])
+    } else if (and) {
+      if (n == 2) {
+        x <- paste0(x[1], " and ", x[2])
+      } else {
+        x <- paste0(paste(x[-n], collapse = ", "), if (oxford_comma) ", and " else " and ", x[n])
+      }
+    } else {
+        x <- paste0(x, collapse = ", ")
+    }
+  }
+  x
 }
