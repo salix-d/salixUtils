@@ -9,7 +9,6 @@
 #' @return A character string of the concatenated values.
 #' @export
 #'
-#' @examples
 concat <- function(x, sep = ""){
   paste(x, collapse = sep)
 }

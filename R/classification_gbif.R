@@ -1,8 +1,51 @@
-.classification_gbif <- function(params, asList = TRUE, rows = NULL){
+#' Get taxonomic classification data from GBIF
+#' @param name     character. Scientific name of the taxon.
+#' @param rank     character. Taxonomic rank of the taxon. One of 'kingdom', 'phylum', 'class', 'order', 'family', 'genus' or 'species'.
+#' @param kingdom  character. Which kingdom should the taxon be a child of.
+#' @param phylum   character. Which phylum should the taxon be a child of. Ignored if rank is higher.
+#' @param class    character. Which class should the taxon be a child of. Ignored if rank is higher.
+#' @param order    character. Which order should the taxon be a child of. Ignored if rank is higher.
+#' @param family   character. Which family should the taxon be a child of. Ignored if rank is higher.
+#' @param genus    character. Which genus should the taxon be a child of. Ignored if rank is higher.
+#' @param strict   logical.   If matching should be strict.
+#' @param start    numeric.
+#' @param asList   logical.   If the output should be a list. Default TRUE.
+#' @param rows     numeric.
+#'
+#' @export
+classification_gbif <- function(name, rank = NULL, kingdom = NULL, phylum = NULL,
+                                class = NULL, order = NULL, family = NULL,
+                                genus = NULL, strict = FALSE, start = NULL,
+                                asList = TRUE, rows = NULL){
+  params <- list(FUN = .classification_gbif,
+                 name = name, rank = rank, kingdom = kingdom, phylum = phylum,
+                 class = class, order = order, family = family, genus = genus,
+                 strict = strict, start = start, asList = asList, rows = rows)
+  params <- params[lengths(params) > 0]
+  out <- do.call(mapply, c(params, SIMPLIFY = FALSE, USE.NAMES = TRUE))
+  structure(unlist(out, recursive = FALSE), class = "classification", db = "gbif")
+}
+
+.classification_gbif <- function(name, rank = NULL, kingdom = NULL, phylum = NULL,
+                                 class = NULL, order = NULL, family = NULL,
+                                 genus = NULL, strict = FALSE, start = NULL,
+                                 asList = TRUE, rows = NULL){
   url = "https://api.gbif.org/v1/species/match"
   ranks <- c("kingdom", "phylum", "class", "order", "family",
              "genus", "species")
-  params <- c(params, verbose = TRUE)
+  params <- c(name = name, rank = rank, kingdom = kingdom, phylum = phylum,
+              class = class, order = order, family = family, genus = genus,
+              strict = strict, start = start, verbose = TRUE)
+  params[["rank"]] <- tolower(params[["rank"]])
+  if (length(params[["rank"]]) &&
+     length(params[c('kingdom', 'phylum', 'class', 'order', 'family', 'genus')])) {
+    n <- which(c('kingdom', 'phylum', 'class', 'order', 'family', 'genus') == params[["rank"]])
+    if (length(n) && n < 6) {
+      ranks2rm <- names(params) %in% c('kingdom', 'phylum', 'class', 'order', 'family', 'genus')[n:6]
+      warning("Ignoring ", toStr(paste0("`", names(params)[ranks2rm], "`")), " argument", if (sum(ranks2rm) > 1) "s"," as `rank` is higher or equal.")
+      params <- params[!ranks2rm]
+    }
+  }
   cli <- crul::HttpClient$new(url = url)
   temp <- cli$get(query = params)
   temp$raise_for_status()
@@ -15,10 +58,9 @@
                                          "note")], stringsAsFactors = FALSE)
   if (any((filt_params <- names(params) %in% c("rank", ranks[1:6])))) {
     filt_params <- params[filt_params]
-    if (all(!names(filt_params) %in% names(tt))) return(empty_res)
-    if (all.equal(filt_params, tt[names(filt_params)])) {
+    if (all(tolower(filt_params) == tolower(tt[names(filt_params)]))) {
       dd <- dat
-    }
+    } else return(empty_res)
   } else {
     dd <- as.data.frame(
       data.table::rbindlist(
@@ -68,16 +110,4 @@
   } else {
     dd[,c(rbind(ranks_name_col, ranks_id_col), recursive = TRUE)]
   }
-}
-#' @export
-classification_gbif <- function(name, rank = NULL, kingdom = NULL, phylum = NULL,
-                                class = NULL, order = NULL, family = NULL,
-                                genus = NULL, strict = FALSE, start = NULL,
-                                asList = TRUE, rows = NULL){
-  params <- list(FUN = .classification_gbif,
-                 name = name, rank = rank, kingdom = kingdom, phylum = phylum,
-                 class = class, order = order, family = family, genus = genus,
-                 strict = strict, start = start, asList = asList, rows = rows)
-  out <- do.call(mapply, c(params[lengths(params) > 0], SIMPLIFY = FALSE, USE.NAMES = TRUE))
-  structure(unlist(out, recursive = FALSE), class = "classification", db = "gbif")
 }

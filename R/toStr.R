@@ -15,8 +15,9 @@
 toStr <- function(x, and = TRUE, oxford_comma = FALSE){
   n <- length(x)
   if (n > 1) {
-    if (all(x == as.integer(x)) && all(x == seq_len(n) + x[[1]] - 1)) {
-      x <- paste(x[[1]], "to", x[[n]])
+    if (isTRUE(all.equal(x, suppressWarnings(as.integer(x)))) &&
+        all(x == (seq_len(n) + x[[1]] - 1))) {
+      x <- paste0(x[[1]], "to", x[[n]])
     } else if (and) {
       if (n == 2) {
         x <- paste0(x[1], " and ", x[2])

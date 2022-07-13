@@ -9,30 +9,30 @@
 #' @export
 #'
 #' @examples
-#' islands_startingWithA <- grep("^A", names(islands), value = TRUE) |> vec2strI(vec = _)
+#' islands_startingWithA <- grep("^A", names(islands), value = TRUE) |> vec2assign(vec = _)
 #' # if the function is there more than once in the document,
 #' # add a separator ('#---') after the line if you run code with ctrl + enter
 #' # since when doing that the range starts on the next line of text, so if the
 #' # function is there too it will act there instead
 #' # You can also use alt + enter to run the single line or
 #' # select the text calling the function to run it.
-#' islands_startingWithA <- grep("^A", names(islands), value = TRUE) |> vec2strI(vec = _)
+#' islands_startingWithA <- grep("^A", names(islands), value = TRUE) |> vec2assign(vec = _)
 #' #---
-#' grep("^A", names(islands), value = TRUE) |> vec2strI(vec = _)
+#' grep("^A", names(islands), value = TRUE) |> vec2assign(vec = _)
 
 vec2assign <- function(vec) {
   context <- rstudioapi::getActiveDocumentContext()
   sel <- context$selection[[1]]
-  string <- vec2str(vec)
+  string <- vec2assign_str(vec)
   # if no selected text find the line on which the function got called
   # and the position to get the range to replace
   if (sel$text == "") {
     r <- sel$range$start[[1]]
     # find position of assignment or function if not assigned
-    ln <- grep("<- ?|vec2strI", context$contents[[r]], value = TRUE)
+    ln <- grep("<- ?|vec2assign", context$contents[[r]], value = TRUE)
     while (!length(ln)) {
       r <- r - 1
-      ln <- grep("<- ?|vec2strI", context$contents[[r]], value = TRUE)
+      ln <- grep("<- ?|vec2assign", context$contents[[r]], value = TRUE)
     }
     # if assigned, makes sure to not erase '<-' by adding 2 to the position
     if (grepl("<-", ln)) {
@@ -46,7 +46,7 @@ vec2assign <- function(vec) {
     # else use the selection range
   } else {
     # make sure to not replace the assignment if selected!
-    pttrn <- "^vec2strI(.*)$|\\|> vec2strI\\(\\)$|\\|> vec2strI\\(vec = _\\)$"
+    pttrn <- "^vec2assign(.*)$|\\|> vec2assign\\(\\)$|\\|> vec2assign\\(vec = _\\)$"
     if (!grepl(pttrn, sel$text) || grepl("<-", sel$text)) stop()
     rng <- sel$range
   }
@@ -63,11 +63,11 @@ vec2assign <- function(vec) {
 #' @export
 #'
 #' @examples
-#' grep("^A", names(islands), value = TRUE) |> vec2str(vec = _) |> cat()
+#' vec <- grep("^A", names(islands), value = TRUE)
+#' cat(vec2assign_str(vec))
 #' # then copy-paste from console to the assignment
-#' # OR save it in clipboard with the clipr package
-#' grep("^A", names(islands), value = TRUE) |> vec2str(vec = _) |> clipr::write_clip()
-#' # then paste it to the assignment
+#' # OR save it in clipboard with the clipr package and then paste it to the assignment
+#' # clipr::write_clip(vec2assign_str(vec))
 #' islands_startingWithA <- c("Africa", "Antarctica", "Asia", "Australia", "Axel Heiberg")
 vec2assign_str <- function(vec) {
   vec |>

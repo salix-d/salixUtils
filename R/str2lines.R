@@ -1,4 +1,4 @@
-#' Add line breaks ("\n") to a string at a specified width.
+#' Add line breaks to a string at a specified width.
 #'
 #' @param string (character) A character vector of length 1.
 #' @param width  (integer|numeric) The number of character per line.

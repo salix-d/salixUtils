@@ -7,18 +7,17 @@
 #' @param envir      the environment to use.
 #' @param inherits   should the enclosing frames of the environment be inspected?
 #'
-#' @return
 #' @export
 #'
 #' @examples
 #' x <- letters
 #' rm2("^x$")
 rm2 <- function(pattern, pos = -1, envir = NULL, inherits = FALSE) {
-  if(is.null(envir)) envir <- as.environment(pos)
+  if (is.null(envir)) envir <- as.environment(pos)
   if (!is.character(pattern))
     stop("`pattern` must be a character string")
   obj2rm <- ls(pattern = pattern, envir = envir)
   msg <- paste("remove :", toStr(obj2rm), "? (y/N)")
-  if(identical(readline(msg), "y"))
-    .Internal(remove(list = obj2rm, envir = envir, inherits = inherits))
+  if (identical(readline(msg), "y"))
+    remove(list = obj2rm, envir = envir, inherits = inherits)
 }
