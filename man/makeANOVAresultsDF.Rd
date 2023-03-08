@@ -2,7 +2,7 @@
 % Please edit documentation in R/diversityAnalysisFunctions.R
 \name{makeANOVAresultsDF}
 \alias{makeANOVAresultsDF}
-\title{Put ANOVA results in a dataéframe object}
+\title{Put ANOVA results in a data.frame object}
 \usage{
 makeANOVAresultsDF(data, x, r)
 }
@@ -17,5 +17,5 @@ makeANOVAresultsDF(data, x, r)
 a data frame with the p- and F- value for each column of the data
 }
 \description{
-Put ANOVA results in a dataéframe object
+Put ANOVA results in a data.frame object
 }

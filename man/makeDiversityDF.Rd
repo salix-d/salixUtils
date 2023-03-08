@@ -2,7 +2,7 @@
 % Please edit documentation in R/diversityAnalysisFunctions.R
 \name{makeDiversityDF}
 \alias{makeDiversityDF}
-\title{Calculates shannon diversity, richness and evenness}
+\title{Make a data.frame of diversity measures (shannon, richness and evenness)}
 \usage{
 makeDiversityDF(df)
 }
@@ -13,5 +13,5 @@ makeDiversityDF(df)
 a data frame with the calculated Shannon diversity index, species richness and evenness
 }
 \description{
-Calculates shannon diversity, richness and evenness
+Make a data.frame of diversity measures (shannon, richness and evenness)
 }
