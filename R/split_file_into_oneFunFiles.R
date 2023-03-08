@@ -13,7 +13,7 @@ split_file_into_oneFunFiles <- function(filePath,
                                         recursive = TRUE) {
   if (!length(filePath))
     stop("argument 'filePath' is missing, with no default")
-  if (dir.exists(filePath)) {
+  if (length(filePath) == 1 && dir.exists(filePath)) {
     filePath <- list.files(filePath, pattern = "*.[Rr]",
                            full.names = TRUE,
                            recursive = recursive)
@@ -90,6 +90,12 @@ find_funs <- function(lines){
   multiLinesFun <-
     stringi::stri_detect_regex(lines,
                                "\\S+\\s*(=|<-)\\s*(function|\\\\)\\([^\\)]*\\)\\s*\\{") |> which()
+  multiLinesFun <- multiLinesFun[!vapply(multiLinesFun, \(i){
+    if(i > 1)
+      stringi::stri_detect_regex(lines[i - 1], ",\\s*$")
+    else
+      FALSE
+  }, NA)]
   oneLineFun <-
     stringi::stri_detect_regex(lines,
                                "\\S+\\s*(=|<-)\\s*(function|\\\\)\\([^\\)]*\\)\\s*[^\\{]*$") |> which()
@@ -143,10 +149,10 @@ find_method_funs <- function(lines){
     for (i in seq_along(methodsFun.begin)) {
       l <- length(lines)
       n <- c(1L, 0L)
-      j <- methodsFun.begin[i] + 1L
+      j <- methodsFun.begin[i]
       while (n[1] != n[2] && j < l) {
-        n <- n + stringi::stri_count_fixed(lines[j], c("(", ")"))
         j <- j + 1L
+        n <- n + stringi::stri_count_fixed(lines[j], c("(", ")"))
       }
       methodsFun.ends[[i]] <- j
     }
