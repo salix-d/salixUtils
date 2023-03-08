@@ -1,6 +1,8 @@
-#' Make a data.frame of diversity measures
+
+#' Make a data.frame of diversity measures (shannon, richness and evenness)
 #' @param df data frame object
 #' @return a data frame with the calculated Shannon diversity index, species richness and evenness
+#' @export
 makeDiversityDF <- function(df){
   div.df <- data.frame(
     H = vegan::diversity(df, "shannon"),
@@ -10,11 +12,12 @@ makeDiversityDF <- function(df){
   return(div.df)
 }
 
-#' Make a data.frame with the results of
+#' Put ANOVA results in a data.frame object
 #' @param data data frame object
 #' @param x    vector to use as the x variable in the lme formula
 #' @param r    vector to use as the random variable in the lme formula
 #' @return a data frame with the p- and F- value for each column of the data
+#' @export
 makeANOVAresultsDF <- function(data, x, r){
   res <- data.frame(stat = c("valeur-p", "valeur-F"))
   res <- cbind(res, `names<-`(rep(NA, length(data)), colnames(data)))

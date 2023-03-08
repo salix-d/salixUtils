@@ -8,6 +8,3 @@ rNames <- function(...) rownames(...)
 cSums <- function(...) colSums(...)
 #' @export
 rSums <- function(...) rowSums(...)
-#' @export
-`%+%` <- function(...) paste0(...)
-

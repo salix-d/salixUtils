@@ -1,101 +1,56 @@
-subsetArr <- function(arr, margin, ind, commas){
-  commas[[margin]] <- ind
-  eval(str2lang(paste0("arr[", paste(commas, collapse = ""), "]")))
+seq_split <- function(x, by = NULL, lenOut = NULL, ...){
+  if (missing(by) == missing(lenOut)) stop("Please, provide one of 'by' and 'lenOut'")
+  l <- if (length(x) > 1) length(x) else as.integer(x)
+  by <- if (missing(by)) as.integer(ceiling(l/lenOut)) else as.integer(by)
+  if (missing(lenOut)) lenOut <- as.integer(ceiling(l/by))
+
+  out <- vector("list", lenOut)
+  b <- i <- 1L
+  e <- by
+  while (i < lenOut) {
+    out[[i]] <- b:e
+    b <- e + 1L
+    e <- e + by
+    i <- i + 1L
+  }
+  out[[lenOut]] <- b:l
+  out
 }
-#' @export
-splitLen <- function(x, lenOut, begin=NULL, end=NULL, ...){
-  print(match.call())
-  if (!is.null(begin) || !is.null(end)) x <- x[begin:end]
-  l <- length(x)
-  grp <- rep(1:lenOut, each = ceiling(l/lenOut))[1:l]
-  unname(split(x, grp))
+
+
+subsetArr <- function(arr, margin, rng = NULL, begin = NULL, end = NULL){
+  if (!is.array(arr)) stop("`a` needsto be an object of class 'array'")
+  d <- dim(arr)
+  if (is.null(rng)) {
+    if (is.null(begin) && is.null(end))
+      stop("provide either rng, begin or end arguments")
+    else {
+      if (is.null(begin)) begin <- 1
+      if (is.null(end)) end <- d[margin]
+      rng <- paste0(begin, ":", end)
+    }
+  }
+  rngs <- vector("list", length(d))
+  for (i in seq_along(d)) {
+    r <- if (length(rng) > 1) rng[[i]] else rng
+    rngs[[i]] <- if (i %in% margin) r else 1:d[[i]]
+  }
+  s <- paste0("arr[", paste(rngs, collapse = ","), "]")
+  eval(str2lang(s))
 }
-methods::setGeneric("splitLen",signature = "x")
-methods::setMethod("splitLen", signature = "data.frame",
-          definition = function(x, lenOut, begin=NULL, end=NULL, margin = 1, ...){
-            if(!is.null(begin) || !is.null(end)){
-              x <- if(margin==1) x[begin:end, ] else x[,begin:end]
-              l <- dim(x)[margin]
-            }
-            l <- dim(x)[margin]
-            grp <- rep(1:lenOut, each = ceiling(l/lenOut))[1:l]
-            if(margin == 1){
-              unname(split.data.frame(x, grp))
-            } else {
-              split(seq(ncol(x)), grp)
-              sapply(split(seq(ncol(x)), grp), function(i) x[,i], simplify = FALSE)
-            }
-          })
-methods::setMethod("splitLen", signature = "matrix",
-          definition = function(x, lenOut, begin=NULL, end=NULL, margin = 1, ...){
-            if(!is.null(begin) || !is.null(end)){
-              x <- if(margin==1) x[begin:end, ] else x[,begin:end]
-              l <- dim(x)[margin]
-            }
-            l <- dim(x)[margin]
-            grp <- rep(1:lenOut, each = ceiling(l/lenOut))[1:l]
-            if(margin == 1){
-              unname(split.data.frame(x, grp))
-            } else {
-              split(seq(ncol(x)), grp)
-              sapply(split(seq(ncol(x)), grp), function(i) x[,i], simplify = FALSE)
-            }
-          })
-methods::setMethod("splitLen", signature = "array",
-          definition = function(x, lenOut, begin=NULL, end=NULL, margin = 1, ...){
-            commas <- as.list(rep(",", length(dim(x))))
-            if(!is.null(begin) || !is.null(end)){
-              x <- subsetArr(arr = x, margin = margin, ind = paste0(begin,":",end), commas = commas)
-            }
-            l <- dim(x)[margin]
-            grp <- rep(1:lenOut, each = ceiling(l/lenOut))[1:l]
-            grp <- split(seq(l), grp)
-            sapply(grp, subsetArr, arr = x, margin = margin, commas = commas, simplify = FALSE)
-          })
-#' @export
-splitBy <- function(x, by, begin=NULL, end=NULL,...){
-  if(!missing(begin)||!missing(end)) x <- x[begin:end]
-  l <- length(x)
-  unname(split(x, rep(1:ceiling(l/by), each = by)[1:l]))
+
+seq_ranges <- function(x, by) {
+  l <- if (length(x) > 1) length(x) else x
+  lenOut <- as.integer(ceiling(l/by))
+  out <- vector("list", lenOut)
+  b <- i <- 1L
+  e <- by
+  while (i < lenOut) {
+    out[[i]] <- b:e
+    b <- e + 1L
+    e <- e + by
+    i <- i + 1L
+  }
+  out[[lenOut]] <- b:l
+  out
 }
-methods::setGeneric("splitBy", signature = "x")
-methods::setMethod("splitBy", signature = "data.frame",
-          definition = function(x, by, begin=NULL, end=NULL, margin = 1){
-            if(!is.null(begin) || !is.null(end)){
-              x <- if(margin==1) x[begin:end, ] else x[,begin:end]
-            }
-            l <- dim(x)[margin]
-            grp <- rep(1:ceiling(l/by), each = by)[1:l]
-            if(margin == 1){
-              unname(split.data.frame(x, grp))
-            } else {
-              split(seq(ncol(x)), grp)
-              sapply(split(seq(ncol(x)), grp), function(i) x[,i], simplify = FALSE)
-            }
-          })
-methods::setMethod("splitBy", signature = "matrix",
-          definition = function(x, by, begin=NULL, end=NULL, margin = 1){
-            if(!is.null(begin) || !is.null(end)){
-              x <- if(margin==1) x[begin:end, ] else x[,begin:end]
-            }
-            l <- dim(x)[margin]
-            if(is.null(by)) by <- ceiling((end-begin+1)/2)
-            grp <- rep(1:ceiling(l/by), each = by)[1:l]
-            if(margin == 1){
-              unname(split.data.frame(x, grp))
-            } else {
-              split(seq(ncol(x)), grp)
-              sapply(split(seq(ncol(x)), grp), function(i) x[,i], simplify = FALSE)
-            }
-          })
-methods::setMethod("splitBy", signature = "array",
-          definition = function(x, by, begin=NULL, end=NULL, margin = 1){
-            commas <- as.list(rep(",", length(dim(x))))
-            if(!is.null(begin) || !is.null(end)){
-              x <- subsetArr(arr = x, margin = margin, ind = paste0(begin,":",end), commas = commas)
-            }
-            l <- dim(x)[margin]
-            grp <- rep(1:ceiling(l/by), each = by)[1:l]
-            grp <- split(seq(l), grp)
-            sapply(grp, subsetArr, arr = x, margin = margin, commas = commas, simplify = FALSE)
-          })
