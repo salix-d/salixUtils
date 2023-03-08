@@ -73,9 +73,16 @@ split_file_into_oneFunFiles <- function(filePath,
       }
     }
     for (i in seq_len(nrow(funMap))) {
-      cat(lines[funMap$begin[i]:funMap$end[i]],
-          sep = "\n",
-          file = file.path(dir, paste0(funMap$name[i], ".R")))
+      if (funMap$type[i] == "method" && any(funMap$name[1:(i - 1)] == funMap$name[i])) {
+        cat(lines[funMap$begin[i]:funMap$end[i]],
+            sep = "\n",
+            file = file.path(dir, paste0(funMap$name[i], ".R")),
+            append = TRUE)
+      } else {
+        cat(lines[funMap$begin[i]:funMap$end[i]],
+            sep = "\n",
+            file = file.path(dir, paste0(funMap$name[i], ".R")))
+      }
     }
   }
 }
