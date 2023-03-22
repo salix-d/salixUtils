@@ -18,9 +18,10 @@ Function to convert a vector to a string formated like
 content of the vector without having to rerun the code used to make it.
 }
 \examples{
-grep("^A", names(islands), value = TRUE) |> vec2assign_str(vec = _) |> cat()
+vec <- grep("^A", names(islands), value = TRUE)
+cat(vec2assign_str(vec))
 # then copy-paste from console to the assignment
 # OR save it in clipboard with the clipr package and then paste it to the assignment
-# grep("^A", names(islands), value = TRUE) |> vec2assign_str(vec = _) |> clipr::write_clip()
+# clipr::write_clip(vec2assign_str(vec))
 islands_startingWithA <- c("Africa", "Antarctica", "Asia", "Australia", "Axel Heiberg")
 }

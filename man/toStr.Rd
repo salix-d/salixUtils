@@ -2,14 +2,16 @@
 % Please edit documentation in R/toStr.R
 \name{toStr}
 \alias{toStr}
-\title{Convert an R Object to a Character String}
+\title{Convert a vector to a character string}
 \usage{
-toStr(x, and = TRUE, oxford_comma = FALSE)
+toStr(x, join_word = "and", quote = FALSE, oxford_comma = FALSE)
 }
 \arguments{
-\item{x}{The object to be converted.}
+\item{x}{A vector to be converted.}
 
-\item{and}{(logical)  Whether to use "and" between the two last item. Default TRUE.}
+\item{join_word}{(character) The word to use between the two last item. Default is 'and'. Set to NULL to omit.}
+
+\item{quote}{(logical) Whether to add single quotes around each word.}
 
 \item{oxford_comma}{(logical) Whether to use an oxford comma. Default FALSE. Ignored if `and` set to FALSE.}
 }
@@ -17,8 +19,9 @@ toStr(x, and = TRUE, oxford_comma = FALSE)
 A character string.
 }
 \description{
-Similar to \link[base]{toString} but with additionnal parameters for more flexibility.
+Similar to \link[base]{toString} but with additional parameters for more flexibility.
 }
 \examples{
 toStr(letters[1:3])
+toStr(1:5)
 }

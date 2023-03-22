@@ -2,7 +2,7 @@
 % Please edit documentation in R/helpers.R
 \name{as.df}
 \alias{as.df}
-\title{shortcut for `as.data.frame()` allowing to name the columns as well}
+\title{Shortcut for `as.data.frame()` allowing to name the columns as well}
 \usage{
 as.df(..., col.names = NULL)
 }
@@ -12,7 +12,7 @@ as.df(..., col.names = NULL)
 \item{col.names}{character vector for the names of the data.frame (colnames)}
 }
 \description{
-shortcut for `as.data.frame()` allowing to name the columns as well
+Shortcut for `as.data.frame()` allowing to name the columns as well
 }
 \examples{
 (mat <- matrix(
