@@ -35,45 +35,40 @@ split_file_into_oneFunFiles <- function(filePath,
     if (is.null(filePath) || is.na(filePath) || !nzchar(filePath))
       stop("'filePath' can't be empty")
     lines <- stringi::stri_read_lines(filePath)
-    # lines <- stringi::stri_read_lines("./salixNextUtils/myFuns.R")
+    lines <- stringi::stri_read_lines("R/aaa.R")
     funMap <- rbind(find_funs(lines), find_method_funs(lines))
     if (!length(funMap)) {
-      stop("Sorry, didn't find any functions")
+      stop("Sorry, didn't find any function assignment.")
     }
     funMap <- funMap[order(funMap$n),]
     rownames(funMap) <- NULL
     funMap$dif <- funMap$n - c(0, funMap$end[-nrow(funMap)])
     funMap$begin <- funMap$n
+    nrw <- nrow(funMap)
+    find_last_comment <- function(x, b, e) {
+      n <- which(stringi::stri_detect_regex(x[b:e], "^\\s*#"))
+      if (length(n))
+        b + max(n) - 1L
+      else
+        e
+    }
     if (keepComments) {
       funMap$begin[funMap$dif > 1] <-
-        vapply(seq_len(nrow(funMap))[funMap$dif > 1], \(i) {
+        vapply(seq_len(nrw)[funMap$dif > 1], \(i) {
           e <- funMap$begin[i]
-          b <- e - funMap$dif[i] + 1
-          n <-
-            which(
-              stringi::stri_detect_regex(
-                lines[b:(e - 1)],
-                "^\\s*$",
-                negate = TRUE,
-                max_count = 1
-              ),
-              useNames = FALSE
-            )
-          if (length(n))
-            b + n - 1
-          else
-            e
+          b <- e - funMap$dif[i] + 1L
+          find_last_comment(lines, b, e)
         }, 0)
-      if (funMap$end[nrow(funMap)] != length(lines)) {
-        n <- which(
-          stringi::stri_detect_regex(
-            lines[(funMap$end[nrow(funMap)] + 1L):length(lines)],
-            "^\\s*$", negate = TRUE))
-        funMap$end[nrow(funMap)] <- funMap$end[nrow(funMap)] + max(n)
+      if (funMap$end[nrw] != length(lines)) {
+        funMap$end[nrw] <- find_last_comment(lines,
+                                             length(lines),
+                                             funMap$end[nrw])
       }
     }
-    for (i in seq_len(nrow(funMap))) {
-      if (funMap$type[i] == "method" && any(funMap$name[1:(i - 1)] == funMap$name[i])) {
+    funMap <- find_S3methods(funMap = funMap)
+    for (i in seq_len(nrw)) {
+      if (funMap$type[i] == "method" &&
+          any(funMap$name[1:(i - 1)] == funMap$name[i])) {
         cat(lines[funMap$begin[i]:funMap$end[i]],
             sep = "\n",
             file = file.path(dir, paste0(funMap$name[i], ".R")),
@@ -86,12 +81,30 @@ split_file_into_oneFunFiles <- function(filePath,
     }
   }
 }
+find_S3methods <- function(funMap){
+  mtd <- stringi::stri_detect_fixed(funMap$name, ".")
+  if (sum(mtd, na.rm = TRUE)) {
+    nms <- stringi::stri_extract_first_regex(funMap$name[mtd], "^[^\\.]+(?=\\.)")
+    names(nms) <- funMap$name[mtd]
+    nms2 <- funMap$name[funMap$name %in% nms]
+    if (length(nms2)) {
+      names(nms2) <- nms2
+      nms <- c(nms2, nms)
+    }
+    n <- funMap$name %in% names(nms)
+    if (sum(n, na.rm = TRUE) != length(nms)) stop()
+    funMap$name[n] <- nms
+    funMap$type[n] <- "method"
+    funMap$type[n][!duplicated(nms)] <- "first"
+  }
+  funMap
+}
 find_funs <- function(lines){
   multiLinesFun <-
     stringi::stri_detect_regex(lines,
                                "\\S+\\s*(=|<-)\\s*(function|\\\\)\\([^\\)]*\\)\\s*\\{") |> which()
   multiLinesFun <- multiLinesFun[!vapply(multiLinesFun, \(i){
-    if(i > 1)
+    if (i > 1)
       stringi::stri_detect_regex(lines[i - 1], ",\\s*$")
     else
       FALSE
@@ -174,7 +187,7 @@ find_method_funs <- function(lines){
     if (any(is.na(methodsFun$name))) {
       stop("Sorry, having trouble finding the names of the method functions")
     }
-    methodsFun
+    methodsFun$type[!duplicated(methodsFun$name)] <- "first"
   } else {
     NULL
   }
