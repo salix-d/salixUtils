@@ -35,7 +35,6 @@ split_file_into_oneFunFiles <- function(filePath,
     if (is.null(filePath) || is.na(filePath) || !nzchar(filePath))
       stop("'filePath' can't be empty")
     lines <- stringi::stri_read_lines(filePath)
-    lines <- stringi::stri_read_lines("R/aaa.R")
     funMap <- rbind(find_funs(lines), find_method_funs(lines))
     if (!length(funMap)) {
       stop("Sorry, didn't find any function assignment.")
@@ -45,13 +44,6 @@ split_file_into_oneFunFiles <- function(filePath,
     funMap$dif <- funMap$n - c(0, funMap$end[-nrow(funMap)])
     funMap$begin <- funMap$n
     nrw <- nrow(funMap)
-    find_last_comment <- function(x, b, e) {
-      n <- which(stringi::stri_detect_regex(x[b:e], "^\\s*#"))
-      if (length(n))
-        b + max(n) - 1L
-      else
-        e
-    }
     if (keepComments) {
       funMap$begin[funMap$dif > 1] <-
         vapply(seq_len(nrw)[funMap$dif > 1], \(i) {
@@ -191,4 +183,11 @@ find_method_funs <- function(lines){
   } else {
     NULL
   }
+}
+find_last_comment <- function(x, b, e) {
+  n <- which(stringi::stri_detect_regex(x[b:e], "^\\s*#"))
+  if (length(n))
+    b + max(n) - 1L
+  else
+    e
 }
