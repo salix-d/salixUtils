@@ -241,9 +241,12 @@ varpart2 <- function(Y,
                       var2rm <- allVars[!x]
                       ls <- .paste(sort(c(var, var2rm)))
                       rs <- .paste(var2rm)
-                      formula <- paste(ls, "-", rs)
-                      RsquareAdj <- eval(str2lang(.abc2X(formula, n = n)), envir = fract)
-                      data.table::data.table(formula, RsquareAdj)
+                      data.table::data.table(
+                        formula = paste(ls, "-", rs),
+                        RsquareAdj = eval(
+                          str2lang(.abc2X(formula, n = n)), envir = fract
+                        )
+                      )
                     }) |>
     data.table::rbindlist(idcol = "id")
   for (i in seq_len(n)[-1L]) {
@@ -254,9 +257,14 @@ varpart2 <- function(Y,
           area2rm <- grepl(paste(tolower(var), collapse = "|"), indfract$id) & !grepl(paste(tolower(allVars[!x]), collapse = "|"), indfract$id)
           area2rm <- indfract[area2rm,]
           formula <- paste0(.paste(c(var, var2rm)), " - ", .paste(var2rm))
-          RsquareAdj <- eval(str2lang(.abc2X(formula, n = n)), envir = fract) - sum(area2rm$RsquareAdj)
-          formula <- paste0(formula, " - (", paste(area2rm$id, collapse = " + "), ")")
-          data.table::data.table(formula, RsquareAdj)
+          data.table::data.table(
+            formula = paste0(formula, " - (",
+                             paste(area2rm$id, collapse = " + "),
+                             ")"),
+            RsquareAdj = eval(
+              str2lang(.abc2X(formula, n = n)), envir = fract
+            ) - sum(area2rm$RsquareAdj)
+          )
         } else {
           tmp <- eval(str2lang(.abc2X(.paste(var), n = n)), envir = fract)
           data.table::data.table(formula = "",
