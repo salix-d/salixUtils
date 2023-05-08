@@ -247,8 +247,7 @@ varpart2 <- function(Y,
                     }) |>
     data.table::rbindlist(idcol = "id")
   for (i in seq_len(n)[-1L]) {
-    out <- bin_tbl[rn_nchar == i,,drop = FALSE] |>
-      apply(1, \(x) {
+    out <- apply(bin_tbl[rn_nchar == i,,drop = FALSE], 1, \(x) {
         var <- allVars[x]
         var2rm <- allVars[!x]
         if (length(var2rm)) {
@@ -260,7 +259,7 @@ varpart2 <- function(Y,
           data.table::data.table(formula, RsquareAdj)
         } else {
           tmp <- eval(str2lang(.abc2X(.paste(var), n = n)), envir = fract)
-          fract2rm <- indfract[,RsquareAdj]
+          fract2rm <- indfract$RsquareAdj
           RsquareAdj <- tmp - sum(fract2rm)
           data.table::data.table(formula = "", RsquareAdj)
         }
