@@ -12,7 +12,6 @@
 #' @param permutations If chisquare = TRUE, the adjusted R^2 is estimated by permutations, and this paramater can be a list of control values for the permutations as returned by the function how, or the number of permutations required, or a permutation matrix where each row gives the permuted indices. (Default is 1000L)
 #' @note
 #' Based on the \code{\link[vegan]{varpart}} function and modified to allow more explanatory models.
-#' @author Salix Dubois
 #'
 #' @return A list
 #'
