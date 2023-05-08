@@ -259,9 +259,8 @@ varpart2 <- function(Y,
           data.table::data.table(formula, RsquareAdj)
         } else {
           tmp <- eval(str2lang(.abc2X(.paste(var), n = n)), envir = fract)
-          fract2rm <- indfract$RsquareAdj
-          RsquareAdj <- tmp - sum(fract2rm)
-          data.table::data.table(formula = "", RsquareAdj)
+          data.table::data.table(formula = "",
+                                 RsquareAdj = tmp - sum(indfract$RsquareAdj))
         }
       }, simplify = FALSE)
     indfract <- rbind(indfract, data.table::rbindlist(out, idcol = "id"))
