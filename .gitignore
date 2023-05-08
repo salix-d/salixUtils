@@ -3,4 +3,5 @@
 .RData
 .Ruserdata
 *.Rproj
-R\tests\*
+R\test\*
+test.*\.R$
