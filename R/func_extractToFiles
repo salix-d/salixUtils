@@ -7,10 +7,7 @@
 #'
 #' @return NULL
 #' @export
-split_file_into_oneFunFiles <- function(filePath,
-                                        outDir = NULL,
-                                        keepComments = TRUE,
-                                        recursive = TRUE) {
+func_extractToFiles <- function(filePath, outDir = NULL, keepComments = TRUE, recursive = TRUE) {
   if (!length(filePath))
     stop("argument 'filePath' is missing, with no default")
   if (length(filePath) == 1 && dir.exists(filePath)) {
