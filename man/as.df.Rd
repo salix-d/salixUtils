@@ -2,17 +2,17 @@
 % Please edit documentation in R/helpers.R
 \name{as.df}
 \alias{as.df}
-\title{Shortcut for `as.data.frame()` allowing to name the columns as well}
+\title{Shortcut for \code{as.data.frame()} allowing to name the columns as well}
 \usage{
 as.df(..., col.names = NULL)
 }
 \arguments{
-\item{...}{same arguments as for `as.data.frame()`}
+\item{...}{same arguments as for \code{as.data.frame()}}
 
 \item{col.names}{character vector for the names of the data.frame (colnames)}
 }
 \description{
-Shortcut for `as.data.frame()` allowing to name the columns as well
+Shortcut for \code{as.data.frame()} allowing to name the columns as well
 }
 \examples{
 (mat <- matrix(

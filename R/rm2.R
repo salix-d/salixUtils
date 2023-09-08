@@ -1,6 +1,6 @@
 #' Remove Objects from a Specified Environment containing a specified pattern
 #'
-#' @description remove object(s) matching a pattern from an environment. The arguments pos, envir and inherits are passed to \link[base]{remove}. A prompt ask to confirm the removal of variables in case the pattern matches somethings the user wants to keep.
+#' @description remove object(s) matching a pattern from an environment. The arguments pos, envir and inherits are passed to [remove][base::remove]. A prompt ask to confirm the removal of variables in case the pattern matches somethings the user wants to keep.
 #'
 #' @param pattern    a regular expression. Only names matching pattern will be removed.
 #' @param pos        where to do the removal. By default, uses the current environment.

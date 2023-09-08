@@ -16,9 +16,9 @@ split_file_into_oneFunFiles(
 
 \item{outDir}{(character) Optional. A directory path where to write the new files. If missing, place them in the filePath directory. Can be the same length as filePath since it will be mapp(ly)ed.}
 
-\item{keepComments}{(logical) Whether to keep the comments before the functions and/or at the end of the file. Default is `TRUE`.}
+\item{keepComments}{(logical) Whether to keep the comments before the functions and/or at the end of the file. Default is \code{TRUE}.}
 
-\item{recursive}{(logical) When filePath is a directory, should the file be listed recursively (with `list.files`). Default is `TRUE`.}
+\item{recursive}{(logical) When filePath is a directory, should the file be listed recursively (with \code{list.files}). Default is \code{TRUE}.}
 }
 \description{
 Split your file(s) containing multiple functions into multiple files containing one function.

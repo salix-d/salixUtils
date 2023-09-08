@@ -16,7 +16,7 @@ rm2(pattern, pos = -1, envir = NULL, inherits = FALSE)
 \item{inherits}{should the enclosing frames of the environment be inspected?}
 }
 \description{
-remove object(s) matching a pattern from an environment. The arguments pos, envir and inherits are passed to \link[base]{remove}. A prompt ask to confirm the removal of variables in case the pattern matches somethings the user wants to keep.
+remove object(s) matching a pattern from an environment. The arguments pos, envir and inherits are passed to \link[base:rm]{remove}. A prompt ask to confirm the removal of variables in case the pattern matches somethings the user wants to keep.
 }
 \examples{
 x <- letters

@@ -42,10 +42,10 @@ varpart2(
 A list
 }
 \description{
-Partition the Variation of Community Matrix by 2 or more Explanatory Models
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 }
 \note{
-Based on the \code{\link[vegan]{varpart}} function and modified to allow more explanatory models.
+Based on the \code{\link[vegan:varpart]{vegan::varpart()}} function and modified to allow more explanatory models.
 }
 \examples{
 \dontrun{

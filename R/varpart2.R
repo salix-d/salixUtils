@@ -11,7 +11,9 @@
 #' @param sqrt.dist Take square root of dissimilarities. This often euclidifies dissimilarities. NB., the argument name cannot be abbreviated. The argument has an effect only when Y are dissimilarities.
 #' @param permutations If chisquare = TRUE, the adjusted R^2 is estimated by permutations, and this paramater can be a list of control values for the permutations as returned by the function how, or the number of permutations required, or a permutation matrix where each row gives the permuted indices. (Default is 1000L)
 #' @note
-#' Based on the \code{\link[vegan]{varpart}} function and modified to allow more explanatory models.
+#' Based on the [vegan::varpart()] function and modified to allow more explanatory models.
+#' @description
+#' `r lifecycle::badge('experimental')`
 #'
 #' @return A list
 #'
@@ -31,6 +33,7 @@ varpart2 <- function(Y,
                      add = FALSE,
                      sqrt.dist = FALSE,
                      permutations = 1000L){
+  lifecycle::signal_stage("experimental", "varpart2()")
   pkg_found <- vapply(c("data.table", "vegan", "stringi"), \(pkg) {
     as.character(tryCatch(packageVersion(pkg), error = \(e) ""))
   }, "")

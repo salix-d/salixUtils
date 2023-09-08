@@ -13,5 +13,5 @@ update_pkgsByLib(type = "source")
 Update packages by library paths
 }
 \details{
-If `R_LIBS_SITE` is set, it will install packages from there first, else it will be in order of `R_LIBS_USER` and/or `.libPaths()`.
+If \code{R_LIBS_SITE} is set, it will install packages from there first, else it will be in order of \code{R_LIBS_USER} and/or \code{.libPaths()}.
 }

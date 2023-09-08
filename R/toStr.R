@@ -1,6 +1,6 @@
 #' Convert a vector to a character string
 #'
-#' @description Similar to \link[base]{toString} but with additional parameters for more flexibility.
+#' @description Similar to [toString][base::toString] but with additional parameters for more flexibility.
 #'
 #' @param x            A vector to be converted.
 #' @param join_word    (character) The word to use between the two last item. Default is 'and'. Set to NULL to omit.
@@ -17,8 +17,8 @@
 toStr <- function(x, join_word = "and", quote = FALSE, oxford_comma = FALSE){
   if (missing(x)) stop("argument 'x' is missing, with no default")
   assert(join_word, what = c("character"), name = "join_word", check.length = 1L)
-  if (!missing(oxford_comma)) oxford_comma <- assert_logical(oxford_comma)
-  if (!missing(quote)) quote <- assert_logical(quote)
+  if (!missing(oxford_comma)) oxford_comma <- assert_TF(oxford_comma)
+  if (!missing(quote)) quote <- assert_TF(quote)
   n <- length(x)
   x <- x[nzchar(x)]
   if (quote) {

@@ -13,13 +13,13 @@ toStr(x, join_word = "and", quote = FALSE, oxford_comma = FALSE)
 
 \item{quote}{(logical) Whether to add single quotes around each word.}
 
-\item{oxford_comma}{(logical) Whether to use an oxford comma. Default FALSE. Ignored if `and` set to FALSE.}
+\item{oxford_comma}{(logical) Whether to use an oxford comma. Default FALSE. Ignored if \code{and} set to FALSE.}
 }
 \value{
 A character string.
 }
 \description{
-Similar to \link[base]{toString} but with additional parameters for more flexibility.
+Similar to \link[base:toString]{toString} but with additional parameters for more flexibility.
 }
 \examples{
 toStr(letters[1:3])
