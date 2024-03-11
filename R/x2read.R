@@ -1,26 +1,4 @@
 #' @export
-save2read <- function(...) {
-  x2y(substitute(...), from = "save", to = "read")
-}
-#' @export
-save2load <- function(...) {
-  x2y(substitute(...), from = "save", to = "load")
-}
-#' @export
-write2read <- function(...) {
-  x2y(substitute(...), from = "write", to = "read")
-}
-mod_str <- function(str, from, to){
-  pttrn <- paste0("^#? ?(.*)", from, "([^\\(]*)\\(([^,]*), ?(.+)\\)$")
-  repl <- paste0("\\3 <- \\1", to, "\\2(\\4)")
-  if (to == "load" && from == "save") {
-    if (!grepl(pttrn, str)) {
-      pttrn <- sub("save", "Save", pttrn)
-      repl <- sub("load", "Load", repl)
-    }
-  }
-  gsub(pttrn, repl, str)
-}
 x2y <- function(..., from, to) {
   hasDots <- length(..1)
   if (hasDots) {
@@ -32,7 +10,7 @@ x2y <- function(..., from, to) {
       }
       string <- paste0(x[[2]], " <- ", gsub(from, to, x[[1]]), "(\"", x[[3]], "\")")
     } else {
-      string <- mod_str(..1, from = from, to = to)
+      string <- x2y_mod_str(..1, from = from, to = to)
     }
   }
   context <- rstudioapi::getActiveDocumentContext()
@@ -52,7 +30,7 @@ x2y <- function(..., from, to) {
       r <- r[length(r)]
       # if not on the call line :
       if (!length(r)) stop("didn't find the function")
-      if (!hasDots) string <- mod_str(context$contents[[r]], from = from, to = to)
+      if (!hasDots) string <- x2y_mod_str(context$contents[[r]], from = from, to = to)
       if (!isConsole) rng <- rstudioapi::document_range(c(r, 1), c(r, Inf))
       # else use the selection range
     } else {
@@ -60,14 +38,41 @@ x2y <- function(..., from, to) {
       if (!hasDots) {
         if (rng[[1]][[1]] != rng[[2]][[1]]) {
           sel$text <- strsplit(sel$text, "\n")[[1]]
-          string <- vapply(sel$text, mod_str, "", from = from, to = to)
+          string <- vapply(sel$text, x2y_mod_str, "", from = from, to = to)
           string <- paste(string[grepl("<-", string)], collapse = "\n")
         } else {
-          string <- mod_str(sel$text, from = from, to = to)
+          string <- x2y_mod_str(sel$text, from = from, to = to)
         }
       }
     }
   }
   rstudioapi::modifyRange(rng, string, context$id) |>
     invisible()
+}
+#' @export
+write2read <- function(...) {
+  x2y(substitute(...), from = "write", to = "read")
+}
+#' @export
+save2read <- function(...) {
+  x2y(substitute(...), from = "save", to = "read")
+}
+#' @export
+save2load <- function(...) {
+  x2y(substitute(...), from = "save", to = "load")
+}
+#' @export
+Save2Load <- function(...) {
+  x2y(substitute(...), from = "Save", to = "Load")
+}
+x2y_mod_str <- function(str, from, to){
+  pttrn <- paste0("^#? ?(.*)", from, "([^\\(]*)\\(([^,]*), ?(.+)\\)$")
+  repl <- paste0("\\3 <- \\1", to, "\\2(\\4)")
+  if (to == "load" && from == "save") {
+    if (!grepl(pttrn, str)) {
+      pttrn <- sub("save", "Save", pttrn)
+      repl <- sub("load", "Load", repl)
+    }
+  }
+  gsub(pttrn, repl, str)
 }

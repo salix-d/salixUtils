@@ -7,7 +7,7 @@
 #'
 #' @return NULL
 #' @export
-func_extractToFiles <- function(filePath, outDir = NULL, keepComments = TRUE, recursive = TRUE) {
+functions2files <- function(filePath, outDir = NULL, keepComments = TRUE, recursive = TRUE) {
   if (!length(filePath))
     stop("argument 'filePath' is missing, with no default")
   if (length(filePath) == 1 && dir.exists(filePath)) {
@@ -24,7 +24,7 @@ func_extractToFiles <- function(filePath, outDir = NULL, keepComments = TRUE, re
   }
   if (length(filePath) > 1) {
     for (x in filePath) {
-      mapply(split_file_into_oneFunFiles, x, dir)
+      mapply(functions2files, x, dir)
     }
   } else {
     if (!is.character(filePath))
@@ -70,6 +70,7 @@ func_extractToFiles <- function(filePath, outDir = NULL, keepComments = TRUE, re
     }
   }
 }
+
 find_S3methods <- function(funMap){
   mtd <- stringi::stri_detect_fixed(funMap$name, ".")
   if (sum(mtd, na.rm = TRUE)) {
@@ -88,6 +89,7 @@ find_S3methods <- function(funMap){
   }
   funMap
 }
+
 find_funs <- function(lines){
   multiLinesFun <-
     stringi::stri_detect_regex(lines,
@@ -143,6 +145,7 @@ find_funs <- function(lines){
     NULL
   }
 }
+
 find_method_funs <- function(lines){
   methodsFun.begin <-
     stringi::stri_detect_regex(lines, "(methods::)?(setGeneric|setMethod)\\(") |> which()
@@ -181,6 +184,7 @@ find_method_funs <- function(lines){
     NULL
   }
 }
+
 find_last_comment <- function(x, b, e) {
   n <- which(stringi::stri_detect_regex(x[b:e], "^\\s*#"))
   if (length(n))

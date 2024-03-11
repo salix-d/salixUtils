@@ -9,6 +9,6 @@
 #' lang2str(list())
 #' }
 #'
-lang2str <- function(x){
-  as.character(as.expression(substitute(expr = x, env = parent.frame(1L))))
+lang2str <- function(x, env = parent.frame(1L)){
+  as.character(as.expression(substitute(expr = x, env = env)))
 }

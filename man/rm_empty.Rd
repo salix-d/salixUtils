@@ -2,22 +2,40 @@
 % Please edit documentation in R/rm_empty.R
 \name{rm_empty}
 \alias{rm_empty}
-\title{Remove empty elements from a vector or list}
+\alias{rm_empty,matrix-method}
+\alias{rm_empty,data.frame-method}
+\alias{rm_empty,data.table-method}
+\alias{rm_empty,missing-method}
+\title{Remove empty elements from a vector, list, matrix, data.frame}
 \usage{
-rm_empty(x)
+rm_empty(x, na.rm = FALSE, margin = NULL)
+
+\S4method{rm_empty}{matrix}(x, na.rm = FALSE, margin = c(1L, 2L))
+
+\S4method{rm_empty}{data.frame}(x, na.rm = FALSE, margin = 2L)
+
+\S4method{rm_empty}{data.table}(x, na.rm = FALSE, margin = 2L)
+
+\S4method{rm_empty}{missing}(x, na.rm = FALSE, margin = 2L)
 }
 \arguments{
-\item{x}{A vector or list.}
+\item{x}{An R object}
+
+\item{na.rm}{(logical) If \code{TRUE}, consider NA values as empty. Default: \code{FALSE}}
+
+\item{margin}{(numeric | integer) For data.frame and matrix, to remove the  empty rows (1L) or empty columns (2L). Default: 2L.}
 }
 \value{
-The vector or list without the empty elements (length 0 or empty strings).
+\code{x} without the empty elements
 }
 \description{
-Remove empty elements from a vector or list
+Remove empty elements from a vector, list, matrix, data.frame
 }
 \examples{
 \dontrun{
 x <- list(0, NULL, "a", NA, "")
 rm_empty(x)
+rm_empty(x, na.rm = TRUE)
+df <- data.frame(a = c(1L, 2L, NA_integer_, 4L, 5L), b = c("a", "b", "", "d", "e"), c = NA)
 }
 }

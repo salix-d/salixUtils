@@ -4,7 +4,7 @@
 \alias{lang2str}
 \title{Convert language to a string}
 \usage{
-lang2str(x)
+lang2str(x, env = parent.frame(1L))
 }
 \arguments{
 \item{x}{language}

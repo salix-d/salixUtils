@@ -16,5 +16,5 @@ Default is "".}
 A character string of the concatenated values.
 }
 \description{
-Concatenateelements of a vector after converting to character.
+Concatenate elements of a vector after converting to character.
 }

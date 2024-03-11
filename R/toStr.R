@@ -17,8 +17,8 @@
 toStr <- function(x, join_word = "and", quote = FALSE, oxford_comma = FALSE){
   if (missing(x)) stop("argument 'x' is missing, with no default")
   assert(join_word, what = c("character"), name = "join_word", check.length = 1L)
-  if (!missing(oxford_comma)) oxford_comma <- assert_TF(oxford_comma)
-  if (!missing(quote)) quote <- assert_TF(quote)
+  if (!missing(oxford_comma)) oxford_comma <- assert_boolean(oxford_comma)
+  if (!missing(quote)) quote <- assert_boolean(quote)
   n <- length(x)
   x <- x[nzchar(x)]
   if (quote) {

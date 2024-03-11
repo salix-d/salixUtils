@@ -4,7 +4,14 @@
 \alias{assert}
 \title{Assert the class and length of an object}
 \usage{
-assert(x, what, name = NULL, check.length = NULL, stopOnFail = NULL)
+assert(
+  x,
+  what,
+  name = NULL,
+  length_check = TRUE,
+  length_req = NULL,
+  stopOnFail = NULL
+)
 }
 \arguments{
 \item{x}{an R object}
@@ -13,7 +20,9 @@ assert(x, what, name = NULL, check.length = NULL, stopOnFail = NULL)
 
 \item{name}{(character) The name of the R object (used in error messages)}
 
-\item{check.length}{Whether to check if the object has length (logical) or the length to assert (integer)}
+\item{length_check}{(logical) Whether to check if the object has length (Default: TRUE)}
+
+\item{length_req}{(numeric) The required length of x.}
 
 \item{stopOnFail}{Whether the function stops as soon as one of the check fails, or keep going to gather all error messages at once.}
 }

@@ -1,3 +1,5 @@
+#' @export
+#' @family sequences
 seq_split <- function(x, by = NULL, lenOut = NULL, ...){
   if (missing(by) == missing(lenOut)) stop("Please, provide one of 'by' and 'lenOut'")
   l <- if (length(x) > 1) length(x) else as.integer(x)
@@ -17,6 +19,26 @@ seq_split <- function(x, by = NULL, lenOut = NULL, ...){
   out
 }
 
+#' @export
+#' @family sequences
+seq_ranges <- function(x, by) {
+  assert_length(x)
+  assert(by, c("numeric", "integer"), "by", TRUE)
+  by <- if (is.numeric(by) && as.integer(by) == by)
+  l <- if (length(x) > 1) length(x) else x
+  lenOut <- as.integer(ceiling(l/by))
+  out <- vector("list", lenOut)
+  b <- i <- 1L
+  e <- by
+  while (i < lenOut) {
+    out[[i]] <- b:e
+    b <- e + 1L
+    e <- e + by
+    i <- i + 1L
+  }
+  out[[lenOut]] <- b:l
+  out
+}
 
 subsetArr <- function(arr, margin, rng = NULL, begin = NULL, end = NULL){
   if (!is.array(arr)) stop("`a` needsto be an object of class 'array'")
@@ -37,20 +59,4 @@ subsetArr <- function(arr, margin, rng = NULL, begin = NULL, end = NULL){
   }
   s <- paste0("arr[", paste(rngs, collapse = ","), "]")
   eval(str2lang(s))
-}
-
-seq_ranges <- function(x, by) {
-  l <- if (length(x) > 1) length(x) else x
-  lenOut <- as.integer(ceiling(l/by))
-  out <- vector("list", lenOut)
-  b <- i <- 1L
-  e <- by
-  while (i < lenOut) {
-    out[[i]] <- b:e
-    b <- e + 1L
-    e <- e + by
-    i <- i + 1L
-  }
-  out[[lenOut]] <- b:l
-  out
 }
