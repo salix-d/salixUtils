@@ -19,6 +19,8 @@ rm2(pattern, pos = -1, envir = NULL, inherits = FALSE)
 remove object(s) matching a pattern from an environment. The arguments pos, envir and inherits are passed to \link[base:rm]{remove}. A prompt ask to confirm the removal of variables in case the pattern matches somethings the user wants to keep.
 }
 \examples{
+\dontrun{
 x <- letters
 rm2("^x$")
+}
 }

@@ -1,5 +1,5 @@
-
 #=== extract ===================================================================
+#' @export
 str_extract_first <- function(str, pattern, fixed = FALSE, ...) {
   ({
     if (fixed)
@@ -10,6 +10,7 @@ str_extract_first <- function(str, pattern, fixed = FALSE, ...) {
      pattern = pattern,
      ...)
 }
+#' @export
 str_extract_last <- function(str, pattern, fixed = FALSE, ...) {
   ({
     if (fixed)
@@ -20,6 +21,7 @@ str_extract_last <- function(str, pattern, fixed = FALSE, ...) {
      pattern = pattern,
      ...)
 }
+#' @export
 str_extract_all <- function(str, pattern, fixed = FALSE, simplify = TRUE, ...) {
   ({
     if (fixed)
@@ -31,6 +33,7 @@ str_extract_all <- function(str, pattern, fixed = FALSE, simplify = TRUE, ...) {
      simplify = simplify,
      ...)
 }
+#' @export
 str_extract <- function(str, pattern, mode = "all", fixed = FALSE, ...) {
   validate(mode, c("all", "first", "last"), several.ok = FALSE)
   switch(mode,
@@ -39,6 +42,7 @@ str_extract <- function(str, pattern, mode = "all", fixed = FALSE, ...) {
          all = str_extract_all
   )(str = str, pattern = pattern, fixed = fixed, ...)
 }
+#' @export
 str_words <- function(str, mode = "first", ...) {
   validate(mode, c("first", "last", "all"))
   switch(mode,
@@ -49,6 +53,7 @@ str_words <- function(str, mode = "first", ...) {
 }
 #===============================================================================
 #=== replace ===================================================================
+#' @export
 str_replace_all <- function(str, pattern, replacement, fixed = FALSE,
                             vectorize_all = FALSE, ...) {
   ({
@@ -64,6 +69,7 @@ str_replace_all <- function(str, pattern, replacement, fixed = FALSE,
     ...
   )
 }
+#' @export
 str_replace_first <- function(str, pattern, replacement, fixed = FALSE, ...) {
   ({
     if (fixed)
@@ -75,6 +81,7 @@ str_replace_first <- function(str, pattern, replacement, fixed = FALSE, ...) {
      replacement = replacement,
      ...)
 }
+#' @export
 str_replace_last <- function(str, pattern, replacement, fixed = FALSE, ...) {
   ({
     if (fixed)
@@ -86,6 +93,7 @@ str_replace_last <- function(str, pattern, replacement, fixed = FALSE, ...) {
      replacement = replacement,
      ...)
 }
+#' @export
 str_replace <- function(str, pattern, replacement,
                         mode = "all", fixed = FALSE,
                         vectorize_all = FALSE, ...) {
@@ -105,26 +113,30 @@ str_replace <- function(str, pattern, replacement,
 }
 #===============================================================================
 #=== detect ====================================================================
+#' @export
 str_detect <- function(str, pattern, fixed = FALSE, ...) {
   if (!fixed)
     stringi::stri_detect_regex(str = str, pattern = pattern, ...)
   else
     stringi::stri_detect_fixed(str = str, pattern = pattern, ...)
 }
+#' @export
 str_detect_which <- function(str, pattern, fixed = FALSE, ...) {
   which(str_detect(str = str, pattern = pattern, ...))
 }
 #===============================================================================
 #=== split =====================================================================
+#' @export
 str_split <- function(str, pattern, fixed = FALSE, ...) {
   if (!fixed)
     stringi::stri_split_regex(str = str, pattern = pattern, ...)
   else
     stringi::stri_split_fixed(str = str, pattern = pattern, ...)
 }
+#' @export
 str_lines <- function(str, omit_empty = FALSE, simplify = TRUE, use.names = TRUE) {
-  salixUtils::assert(str, "character", "str", check.length = TRUE)
-  salixUtils::assert(omit_empty, "logical", "omit_empty", check.length = TRUE)
+  salixUtils::assert(str, "character", "str", length_check = TRUE)
+  salixUtils::assert(omit_empty, "logical", "omit_empty", length_check = TRUE)
 
   out <- {
     if (length(str) == 1 && simplify && !omit_empty) {
@@ -143,6 +155,7 @@ str_lines <- function(str, omit_empty = FALSE, simplify = TRUE, use.names = TRUE
 }
 #===============================================================================
 #=== count =====================================================================
+#' @export
 str_count <- function(str, pattern, fixed = FALSE, ...) {
   if (!fixed)
     stringi::stri_count_regex(str = str, pattern = pattern, ...)
@@ -151,6 +164,7 @@ str_count <- function(str, pattern, fixed = FALSE, ...) {
 }
 #===============================================================================
 #=== drop ======================================================================
+#' @export
 str_drop <- function(str, pattern, fixed = FALSE) {
   to <- {
     if (!fixed)
@@ -179,8 +193,8 @@ str_wrap <- function(string, width = 80){
   }
   string
 }
-
-str2lines_format <- function(string, width = 80){
+#' @export
+str_wrap <- function(string, width = 80){
   if (length(width) != 1)
     stop("'width' must be of length 1")
   if (!is.numeric(width) && !is.integer(width))

@@ -18,21 +18,19 @@ assert <- function(x,
   if (is.null(name)) {
     name <- lang2str(x)
   }
-  assert(length_check, "logical", "length_check", 1L)
-  assert(length_req, "logical", "length_req", 1L)
   msgLen <- NULL
   msgClass <- NULL
-  if (length_check) {
+  if (isTRUE(length_check)) {
     if (is.null(length_req)) {
       length_req <- 0L
     } else {
-      assert(x.length, c("numeric", "integer"), "x.length", TRUE, 1L)
-      x.length <- as.integer(x.length)
-      # assert_positive(x.length)
+      length_req <- as.integer(length_req)
+      if (!length_req > 0) stop()
+      # assert_positive(length_req)
     }
     msgLen <- assert_length(
       x = x,
-      len = check.length,
+      len = length_check,
       name = name,
       stopOnFail = {
         if (is.logical(stopOnFail) && !is.na(stopOnFail))

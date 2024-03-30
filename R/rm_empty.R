@@ -24,6 +24,7 @@ methods::setGeneric("rm_empty", signature = "x", function(x, na.rm = FALSE, marg
 })
 
 #' @rdname rm_empty
+#' @exportMethod matrix
 methods::setMethod(
   f = "rm_empty",
   signature = "matrix",
@@ -51,6 +52,7 @@ methods::setMethod(
   valueClass = "matrix"
 )
 #' @rdname rm_empty
+#' @exportMethod data.frame
 methods::setMethod(
   f = "rm_empty",
   signature = "data.frame",
@@ -75,6 +77,7 @@ methods::setMethod(
 )
 
 #' @rdname rm_empty
+#' @exportMethod data.table
 methods::setMethod(
   f = "rm_empty",
   signature = "data.table",
@@ -99,6 +102,7 @@ methods::setMethod(
 )
 
 #' @rdname rm_empty
+#' @exportMethod missing
 methods::setMethod(
   f = "rm_empty",
   signature = signature("missing"),

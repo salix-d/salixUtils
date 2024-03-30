@@ -11,9 +11,12 @@
 #' }
 #'
 #' @export
-validate <- function(x, choices, name, several.ok = TRUE) {
+validate <- function(x, choices, name = NULL, several.ok = TRUE) {
   assert(x, what = class(choices)[[1]], name = name,
-         check.length = TRUE, x.length = if (several.ok) 0L else 1L)
+         length_check = TRUE, length_req = if (several.ok) 0L else 1L)
+  if (is.null(name)) {
+    name <- lang2str(x)
+  }
   m <- pmatch(tolower(x), table = choices, nomatch = 0L)
   wrong <- m == 0L
   if (any(wrong)) {

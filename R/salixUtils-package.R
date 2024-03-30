@@ -8,6 +8,5 @@
 #' @importFrom rstudioapi modifyRange
 #' @import data.table
 #' @import stringi
-#' @import vegan
 ## usethis namespace: end
 NULL

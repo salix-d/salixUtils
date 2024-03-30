@@ -9,9 +9,10 @@
 #'
 #' @export
 #'
-#' @examples
+#' @examples \dontrun{
 #' x <- letters
 #' rm2("^x$")
+#' }
 rm2 <- function(pattern, pos = -1, envir = NULL, inherits = FALSE) {
   if (is.null(envir)) envir <- as.environment(pos)
   if (!is.character(pattern))
